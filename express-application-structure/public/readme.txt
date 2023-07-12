@@ -1,0 +1,1 @@
+This is the test project for static props.

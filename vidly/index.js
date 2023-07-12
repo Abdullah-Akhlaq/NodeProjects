@@ -4,6 +4,10 @@ const app = express();
 const morgan = require("morgan");
 const Joi = require("joi");
 const logger = require("./logger"); // import middle ware
+app.set("view engine", "pug");
+app.set("views", "./views");
+
+const startupDebugger = require("debug")("app:startup"); // use this debug for debugging
 
 //===build in the 3rd party method to use =====
 
@@ -19,7 +23,8 @@ app.use(express.static("public")); // public static data
 
 //=====setting the environment of the library whether it work on which envirnoment======
 
-console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+startupDebugger("process.env.NODE_ENV", process.env.NODE_ENV);
+
 console.log('app.get("env")', app.get("env"));
 // process.env.NODE_ENV;
 // app.get("env"); //by default the envirnoment is in the development level
@@ -69,7 +74,12 @@ app.post("/api/movies", (req, res) => {
 });
 
 app.get("/api/project", (req, res) => {
-  res.send(Project);
+  res.render("index", {
+    title: "My Express App ",
+    message:
+      " Using view engine pug to display data/ when we are building resetfull api we don't need this ",
+  });
+  // res.send(Project);
 });
 
 const port = process.env.PORT || 4000;
