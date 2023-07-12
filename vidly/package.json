@@ -1,7 +1,13 @@
 {
-  "name": "express-demo",
+  "dependencies": {
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "joi": "^17.9.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22"
+  },
+  "name": "vidly",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,9 +16,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.18.2",
-    "joi": "^17.9.2",
-    "nodemon": "^2.0.22"
-  }
+  "description": ""
 }
