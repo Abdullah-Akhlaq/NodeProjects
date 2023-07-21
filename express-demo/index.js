@@ -75,7 +75,7 @@ app.put("/api/courses/:id", (req, res) => {
 
   if (!course) {
     //status is for checking status code and send is used for displaying messages
-   return res.status(404).send("This Project is not available.");
+    return res.status(404).send("This Project is not available.");
   }
 
   if (error) {
