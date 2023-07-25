@@ -23,9 +23,27 @@ connectToDatabase();
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  age: { type: Number, required: true },
+  isPublished: {
+    type: Boolean,
+  },
+  age: {
+    type: Number,
+    required:true,
+    validate: {
+      validator: function (v) {
+        return v > 9;
+      },
+      message: "Age must be above 10",
+    },
+  },
   email: { type: String, required: true, unique: true },
   date: { type: Date, default: Date.now },
+  price: {
+    type: Number,
+    required: function () {
+      return this.isPublished; //if isPublished is true then price is required
+    },
+  },
 });
 
 // Create the model from the schema
@@ -34,14 +52,16 @@ const User = mongoose.model("User", userSchema);
 
 const createUserDB = async () => {
   const user = new User({
-    name: "ali",
-    age: 20,
-    email: "ali@gmail.com",
+    name: "asd",
+    age: 9,
+    email: "a1010@gmail.com",
+    isPublished: true,
+    price: 32,
   });
   const result = await user.save();
   console.log(result);
 };
-// createUserDB()
+createUserDB();
 
 const getuserDB = async () => {
   //eq (equal)
@@ -60,7 +80,7 @@ const getuserDB = async () => {
     //  find({ age: { $in: [12] } })
     .find()
     .or({ name: "Abdulla" }, { age: 22 })
-    .skip(pageNumber - 1 * pageSize)
+    .skip((pageNumber - 1) * pageSize)
     .limit(pageSize)
     .sort({ name: 1 }) // sort array by name if 1 else -1 in desending
     .count()
@@ -84,10 +104,12 @@ const getExerciseDB = async () => {
   const pageNumber = 2;
   const pageSize = 10;
 
-  const USERS = await User.find()
-    .or({ name: /.*ali.*/ }, { age: { $gte: 10 } })
-    // skip(pageNumber-0 * pageSize)
-    .limit(pageSize)
+  const USERS = await User.find().or(
+    { name: /.*ali.*/ },
+    { age: { $gte: 10 } }
+  );
+  // skip((pageNumber - 1) * pageSize)
+  limit(pageSize)
     .sort({ name: 1 }) // sort array by name if 1 else -1 in desending
     // .count()
     .select({
@@ -95,4 +117,29 @@ const getExerciseDB = async () => {
     });
   console.log(USERS);
 };
-getExerciseDB();
+// getExerciseDB();
+
+const updateUserDB = async (id) => {
+  const user = await User.findById(id);
+
+  if (!user) {
+    return;
+  }
+  user.name = "Updated Name";
+  user.age = 20;
+
+  connectToDatabase;
+  const result = await user.save();
+
+  console.log("result", result);
+};
+
+// updateUserDB("64ba2fe6d892b70957716712");
+
+const deleteUserDB = async (id) => {
+  const user = await User.deleteOne({ _id: id });
+
+  console.log("user====", user);
+};
+
+// deleteUserDB("64ba2fe6d892b70957716712");
