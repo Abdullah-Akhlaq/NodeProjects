@@ -1,9 +1,19 @@
 // server.listen(7000)
 
+
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+const userAuth = require("./route/user");
+const Project = require("./schema/projectSchema");
+
+
+//route
+app.use("/api/userAuth",userAuth);
+
 const mongoose = require("mongoose");
-
 // Connect to the MongoDB database
-
 async function connectToDatabase() {
   try {
     await mongoose.connect("mongodb://0.0.0.0:27017/mogno-demo-db", {
@@ -19,42 +29,15 @@ async function connectToDatabase() {
 
 connectToDatabase();
 
-// Define the schema
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log("listening on Port 4000"));
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  isPublished: {
-    type: Boolean,
-  },
-  age: {
-    type: Number,
-    required:true,
-    validate: {
-      validator: function (v) {
-        return v > 9;
-      },
-      message: "Age must be above 10",
-    },
-  },
-  email: { type: String, required: true, unique: true },
-  date: { type: Date, default: Date.now },
-  price: {
-    type: Number,
-    required: function () {
-      return this.isPublished; //if isPublished is true then price is required
-    },
-  },
-});
 
-// Create the model from the schema
-//this is the document that will be created in the database
-const User = mongoose.model("User", userSchema);
 
 const createUserDB = async () => {
-  const user = new User({
-    name: "asd",
-    age: 9,
-    email: "a1010@gmail.com",
+  const user = new Project({
+    name: "RND",
+    age: 20,
     isPublished: true,
     price: 32,
   });
@@ -76,7 +59,7 @@ const getuserDB = async () => {
   const pageNumber = 2;
   const pageSize = 1;
 
-  const course = await User
+  const course = await Project
     //  find({ age: { $in: [12] } })
     .find()
     .or({ name: "Abdulla" }, { age: 22 })
@@ -104,7 +87,7 @@ const getExerciseDB = async () => {
   const pageNumber = 2;
   const pageSize = 10;
 
-  const USERS = await User.find().or(
+  const USERS = await Project.find().or(
     { name: /.*ali.*/ },
     { age: { $gte: 10 } }
   );
@@ -120,7 +103,7 @@ const getExerciseDB = async () => {
 // getExerciseDB();
 
 const updateUserDB = async (id) => {
-  const user = await User.findById(id);
+  const user = await Project.findById(id);
 
   if (!user) {
     return;
@@ -137,7 +120,7 @@ const updateUserDB = async (id) => {
 // updateUserDB("64ba2fe6d892b70957716712");
 
 const deleteUserDB = async (id) => {
-  const user = await User.deleteOne({ _id: id });
+  const user = await Project.deleteOne({ _id: id });
 
   console.log("user====", user);
 };

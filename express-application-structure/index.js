@@ -1,14 +1,11 @@
-
-
-const projects =require('./routes/projects');
-const express=require('express');
-const app =express()
-app.use('/api/projects', projects)
+const projects = require("./routes/projects");
+const express = require("express");
+const app = express();
+app.use("api/projects", projects);
 app.set("view engine", "pug");
 app.set("views", "./views");
 
 app.use(express.json());
-
 
 app.get("/api/projectView", (req, res) => {
   res.render("index", {
@@ -19,7 +16,5 @@ app.get("/api/projectView", (req, res) => {
   // res.send(Project);
 });
 
-
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log("listening on Port 4000"));
-
