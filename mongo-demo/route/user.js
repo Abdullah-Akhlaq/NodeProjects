@@ -1,4 +1,4 @@
-const UserAuth = require("../schema/authSchema");
+const UserAuth = require("../modals/authModal");
 const express = require("express");
 const router = express.Router();
 router.use(express.json());
@@ -14,14 +14,17 @@ router.post("/", async (req, res) => {
     res.status(400).send(error.details[0].message);
     return;
   }
+  let user = await UserAuth.findOne({email:req.body.email});
 
-  const newUser = UserAuth({
+  if (user) return res.status(400).send('User Already Exist')
+
+   user = UserAuth({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
   });
 
-  const result = await newUser.save();
+  const result = await user.save();
   res.send(result);
 });
 
