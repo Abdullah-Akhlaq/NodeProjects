@@ -5,11 +5,14 @@ app.use(express.json());
 
 const userAuth = require("./route/user");
 const Project=require("./route/project")
+const LoginAuth=require("./route/authUser")
 
 
 //route
 app.use("/api/user",userAuth);
 app.use('/api/project',Project)
+app.use('/api/login',LoginAuth)
+
 
 const mongoose = require("mongoose");
 // Connect to the MongoDB database

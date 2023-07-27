@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
  const authSignUpSchema = new mongoose.Schema({
-  name: { type: String, min: 3, max: 10, require: true },
+  name: { type: String, min: 3, max: 10},
   email: {
     type: String,
     unique: true,
@@ -13,6 +13,6 @@ const mongoose = require("mongoose");
   },
 });
 
-const UserAuth = mongoose.model("usersDetails", authSignUpSchema);
+const User = mongoose.model("usersDetails", authSignUpSchema);
 
-module.exports = UserAuth;
+module.exports = User;
