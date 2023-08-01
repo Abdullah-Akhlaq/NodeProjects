@@ -2,17 +2,22 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+require("dotenv").config({ path: "config/.env" });
+const secretKey = process.env.JWT_SECRET;
 
 const userAuth = require("./route/user");
-const Project=require("./route/project")
-const LoginAuth=require("./route/authUser")
-
+const Project = require("./route/project");
+const LoginAuth = require("./route/authUser");
 
 //route
-app.use("/api/user",userAuth);
-app.use('/api/project',Project)
-app.use('/api/login',LoginAuth)
+app.use("/api/user", userAuth);
+app.use("/api/project", Project);
+app.use("/api/login", LoginAuth);
 
+if (!secretKey) {
+  console.error("FATAL ERROR , jwt is not defined");
+  process.exit(1);
+}
 
 const mongoose = require("mongoose");
 // Connect to the MongoDB database

@@ -2,10 +2,10 @@ const Project = require("../modals/projectModal");
 const Joi= require ('joi')
 
 const express= require('express');
-const router= express.Router()
+const router= express.Router();
+const auth=require('../middleware/auth')
 
-
-router.post('/' , async(req,res)=>{
+router.post('/' ,auth, async(req,res)=>{
 const {error}=  validateProject(req.body);
 
 console.log('error',error);

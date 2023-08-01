@@ -6,6 +6,9 @@ const _ = require("lodash");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
+const secretKey = process.env.JWT_SECRET;
+const jwt = require('jsonwebtoken')
+
 router.post("/", async (req, res) => {
   const { error } = validateUser(req.body);
   console.log("req.body", req.body);
@@ -18,7 +21,7 @@ router.post("/", async (req, res) => {
   if (user) return res.status(400).send("User Already Exist");
 
   const response = _.pick(req.body, ["name", "email", "password"]);
-  user = UserAuth(
+  user = User(
     response
     // {  name: req.body.name,
     //   email: req.body.email,
@@ -28,7 +31,12 @@ router.post("/", async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
 
   await user.save();
-  res.send(
+
+  const token=user.generateAuthUser();
+  // const options = { expiresIn: "1h" };
+  // const token = jwt.sign({user}, secretKey, options);
+
+  res.header("x-auth-header", token).send(
     _.pick(user, ["name", "email", "password"])
     // result
   );

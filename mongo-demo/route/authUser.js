@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../modals/authModal");
+
 const Joi = require("joi");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
+//for environment variable
+require("dotenv").config({ path: "config/.env" });
+
+const jwt = require("jsonwebtoken");
+const secretKey = process.env.JWT_SECRET;
 
 router.post("/", async (req, res) => {
   const { error } = validateUser(req.body);
@@ -22,8 +28,15 @@ router.post("/", async (req, res) => {
   if (!validPasswod) {
     return res.status(400).send("Invalid Email or Passwords");
   }
-  const options = { expiresIn: "1h" };
-  const token = jwt.sign(user, "scretKey", options);
+
+  const payload = {
+    _id: user._id,
+  };
+
+  const token=user.generateAuthUser();
+
+  // const options = { expiresIn: "1h" };
+  // const token = jwt.sign(payload, secretKey, options);     //config.get , we will store the environment variables in config file in the environment variable
 
   res.send({ token, message: "User Login Succfully" });
 });
