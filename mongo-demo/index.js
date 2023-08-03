@@ -8,11 +8,15 @@ const secretKey = process.env.JWT_SECRET;
 const userAuth = require("./route/user");
 const Project = require("./route/project");
 const LoginAuth = require("./route/authUser");
+const Teams=require('./route/team')
 
 //route
 app.use("/api/user", userAuth);
 app.use("/api/project", Project);
 app.use("/api/login", LoginAuth);
+app.use("/api/team", Teams);
+
+
 
 if (!secretKey) {
   console.error("FATAL ERROR , jwt is not defined");

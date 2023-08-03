@@ -14,10 +14,11 @@ const authSignUpSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  isAdmin:Boolean  
 });
 //these are pre-defined method which we can use when we are writting same logic and want to use multiple time
 authSignUpSchema.methods.generateAuthUser = function () {
-  const token = jwt.sign({_id:this._id}, secretKey, { expiresIn: "1h" });
+  const token = jwt.sign({_id:this._id,isAdmin:this.isAdmin}, secretKey, { expiresIn: "1h" });
   return token;
 };
 
